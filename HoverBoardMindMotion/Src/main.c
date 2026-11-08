@@ -84,6 +84,13 @@ s32 main(void){
 			DELAY_Ms(1000);
 		}
 	}
+
+	// Wojtek safety gate: experimental FOC modes 4-6 are not yet commissioned.
+	// Never allow an EEPROM-stored/unknown mode to enter the incomplete FOC path.
+	// Keep the established legacy voltage mode as the conservative fallback.
+	if(DRIVEMODE > SINE_SPEED){
+		DRIVEMODE = COM_VOLT;
+	}
 	
 	//initialize normal gpio
 	io_init();
