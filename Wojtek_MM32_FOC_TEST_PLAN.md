@@ -32,6 +32,10 @@ For modes 0–3:
 - [ ] Valid type-2 packet can change only supported legacy modes.
 - [ ] Mode values 4, 5, 6 and out-of-range values are rejected.
 - [ ] Bad CRC, truncated packet, unknown type and wrong slave ID are rejected.
+- [ ] Parser powers up unsynchronized: arbitrary startup bytes before `/` are ignored.
+- [ ] Unknown type immediately resets parser state; following valid packet is accepted.
+- [ ] Invalid/zero/stale frame length cannot reach CRC calculation or index outside the receive buffer.
+- [ ] Back-to-back valid frames of types 0, 1 and 2 are accepted without parser desynchronization.
 - [ ] Startup diagnostic text is ignored until a complete valid packet is received.
 - [ ] Timeout is tested independently on both controllers.
 - [ ] Verify TX topology before connecting two controllers to a shared bus.
