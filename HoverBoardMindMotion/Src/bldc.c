@@ -141,6 +141,14 @@ void commutate(){//U,V,W(A,B,C)
 
 
 void speedupdate(){
+	// Wojtek EXTREME safety gate: never execute experimental FOC modes
+	// while the power-stage components and current-sense scaling are unverified.
+	// UART configuration also rejects modes above SINE_SPEED; this is a runtime backstop.
+	if(DRIVEMODE > SINE_SPEED){
+		DRIVEMODE = COM_VOLT;
+		pwm = 0;
+		PIDrst();
+	}
 	if(poweron>127){
 		RemoteUpdate();	
 		//speed=200;
