@@ -2,8 +2,11 @@
 
 ## Selected hardware profile
 
-- MOSFET identity: UNKNOWN
-- Cooling: PASSIVE / original board cooling
+- MOSFET marking previously identified from board photos: SP60N115 (six devices per board; verify all devices on both boards before final limits)
+- Gate driver marking: ID2005
+- Current-sense / analog IC marking: HM8632S8 (topology and gain still require measurement)
+- Controller: MM32SPIN05PF; two split-board controllers for left/right drive
+- Cooling: PASSIVE / no added heatsink confirmed
 - Objective: highest combined usable torque and speed
 - Current release state: FOC modes 4–6 blocked at startup and through UART configuration
 - Current limits: do not increase until the power stage and analog scaling are identified and measured
@@ -28,6 +31,7 @@ Torque and top speed are not the same thing. Increasing q-axis current mainly ra
 
 - Keep drive modes 0–3 as the only modes selectable through normal UART configuration.
 - Keep startup fallback to COM_VOLT for stored drive-mode values above SINE_SPEED.
+- UART parser now starts unsynchronized, accepts only known fixed-size frame types, and rejects unknown types/invalid lengths before CRC parsing.
 - Do not change `SOFT_ILIMIT`, `AWDG`, PWM_RES, battery limits, watchdog settings or PI gains based on guessed MOSFET identity.
 - Do not use the sample `pinstorage[64]` initializer as proof of the installed board's calibrated analog scaling.
 - Do not change the q-axis lower PI bound to a negative value until current polarity, Hall direction and Park transform signs are verified.
@@ -78,6 +82,7 @@ Use measured values and worst-case datasheet values. The firmware threshold must
 - No current or PWM increase.
 
 ### Stage 2 — improve legacy control safely
+- UART receive parser hardening is committed: initial noise is ignored until `/`, and unknown packet types cannot reuse a stale frame length.
 - Verify UART timeout and neutral-command behavior.
 - Measure speed feedback noise and latency.
 - Tune only legacy speed-loop response after logging setpoint, measured RPM, PWM and current.
