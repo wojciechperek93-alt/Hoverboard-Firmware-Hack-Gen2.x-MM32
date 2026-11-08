@@ -8,7 +8,7 @@
 - Current release state: FOC modes 4–6 blocked at startup and through UART configuration
 - Current limits: do not increase until the power stage and analog scaling are identified and measured
 
-This profile is deliberately a commissioning profile, not a high-current preset. With unknown MOSFETs and passive cooling there is no defensible numeric current limit or thermal ceiling to enter into firmware.
+This profile is deliberately a commissioning profile, not a high-current preset. The SP60N115 marking narrows the component identification, but does not establish the board's safe current: PCB copper, device mounting, switching loss, gate drive, shunts, current-sense gain, connectors, battery/BMS and passive thermal path remain limiting factors. There is no defensible numeric current limit or thermal ceiling to enter into firmware from the marking alone.
 
 ## What "EXTREME" means for this build
 
@@ -51,7 +51,7 @@ Before numeric tuning, record:
 | Motor | Phase resistance, winding configuration, Hall sequence and temperature |
 | PCB | Board revision, copper condition, connector and wire ratings |
 
-Photograph both sides of each board and close-ups of MOSFET and driver markings. Left and right boards must be checked separately; do not assume they are identical.
+The user previously supplied board photos and discussed these markings; do not request the same photos again by default. Re-check only if a marking is ambiguous or the two boards may differ. Left and right boards must still be checked separately; do not assume they are identical.
 
 ## Measurement-led limit calculation
 
@@ -114,4 +114,4 @@ Log timestamp, requested command, measured RPM, bus voltage, battery current, ph
 
 ## Release decision
 
-With MOSFET identity unknown and passive cooling, this branch must not increase current limits or unlock FOC. The next useful step is component identification and current-sensor calibration. After that, limits can be calculated for the actual hardware rather than guessed.
+With SP60N115 / ID2005 / HM8632S8 markings identified but current-sense scaling, board thermal path and hardware trip behavior not calibrated, this branch must not increase current limits or unlock FOC. The next useful step is to verify the exact datasheets and measure shunt resistance, amplifier gain, ADC scaling, hardware-break response and thermal rise on each board. After that, limits can be calculated for the actual hardware rather than guessed.
