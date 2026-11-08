@@ -192,10 +192,22 @@ void serialit(void){
 			case 0: iRxDataSize = sizeof(SerialServer2Hover);	break;
 			case 1: iRxDataSize = sizeof(SerialServer2HoverMaster);	break;
 			case 2: iRxDataSize = sizeof(SerialServer2HoverConfig);	break;
+			default:
+				// Reject unknown frame types immediately; never parse with a stale/zero length.
+				iReceivePos = -1;
+				iRxDataSize = 0;
+				return;
 		}
 		return;
 	}
 	
+	// All supported frames are fixed-size and shorter than the receive buffer.
+	if (iRxDataSize < 5 || iRxDataSize > sizeof(aReceiveBuffer) || iReceivePos > iRxDataSize)
+	{
+		iReceivePos = -1;
+		iRxDataSize = 0;
+		return;
+	}
 	if (iReceivePos < iRxDataSize)
 		return;
 		
